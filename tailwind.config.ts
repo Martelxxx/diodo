@@ -9,26 +9,39 @@ const config = {
     "./src/**/*.{ts,tsx}",
     "*.{js,ts,jsx,tsx,mdx}",
   ],
-  prefix: "",
   theme: {
     container: {
       center: true,
-      padding: "2rem",
+      padding: "1.5rem",
       screens: {
         "2xl": "1400px",
       },
     },
     extend: {
+      fontFamily: {
+        poppins: ["var(--font-poppins)", "sans-serif"],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        gold: {
-          DEFAULT: "#D4AF37",
-          light: "#E5C158",
-          dark: "#B39429",
+        synapse: {
+          orange: "#F28B38",
+          teal: "#21BDAD",
+          blue: "#3C93C2",
+          pink: "#F24B59",
+        },
+        // African-inspired color palette
+        africa: {
+          red: "#E94822", // Warm African red
+          orange: "#F2994A", // Sunset orange
+          yellow: "#F2C94C", // Savanna yellow
+          green: "#219653", // Forest green
+          teal: "#1EA896", // Coastal teal
+          purple: "#9B51E0", // Royal purple
+          brown: "#A05E2C", // Earth brown
         },
         primary: {
           DEFAULT: "hsl(var(--primary))",
@@ -66,31 +79,22 @@ const config = {
       },
       keyframes: {
         "accordion-down": {
-          from: { height: "0" },
+          from: { height: 0 },
           to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
           from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: "0" },
-        },
-        fadeIn: {
-          from: { opacity: "0" },
-          to: { opacity: "1" },
-        },
-        slideUp: {
-          from: { transform: "translateY(10px)", opacity: "0" },
-          to: { transform: "translateY(0)", opacity: "1" },
+          to: { height: 0 },
         },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        fadeIn: "fadeIn 0.5s ease-out forwards",
-        slideUp: "slideUp 0.5s ease-out forwards",
       },
-      fontFamily: {
-        sans: ["var(--font-sans)"],
-        serif: ["var(--font-serif)"],
+      backgroundImage: {
+        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+        "synapse-gradient": "linear-gradient(90deg, #F28B38 0%, #21BDAD 100%)",
+        "africa-gradient": "linear-gradient(90deg, #E94822 0%, #F2C94C 50%, #219653 100%)",
       },
     },
   },

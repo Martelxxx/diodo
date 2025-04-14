@@ -1,47 +1,24 @@
 import type React from "react"
-import { Inter } from "next/font/google"
-import { Playfair_Display } from "next/font/google"
+import "./globals.css"
+import { LanguageProvider } from "@/contexts/language-context"
 import { ThemeProvider } from "@/components/theme-provider"
-import { cn } from "@/lib/utils"
-import "@/app/globals.css"
-import Header from "@/components/header"
-import Footer from "@/components/footer"
-
-const fontSans = Inter({
-  subsets: ["latin"],
-  variable: "--font-sans",
-})
-
-const fontSerif = Playfair_Display({
-  subsets: ["latin"],
-  variable: "--font-serif",
-  display: "swap",
-})
+import { Analytics } from "@vercel/analytics/react"
 
 export const metadata = {
-  title: "Diodo Couture | Mode, Textile Artisanat, Elegance",
-  description:
-    "Découvrez l'élégance et l'authenticité de Diodo Couture - Une fusion de tradition et modernité dans la mode et l'artisanat textile.",
+  title: "Synapse AI - Digital Agency",
+  description: "Innovative digital solutions powered by AI",
     generator: 'v0.dev'
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" suppressHydrationWarning>
-      <head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-      </head>
-      <body className={cn("min-h-screen bg-background font-sans antialiased", fontSans.variable, fontSerif.variable)}>
-        <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
-          <div className="relative flex min-h-screen flex-col">
-            <Header />
-            <main className="flex-1">{children}</main>
-            <Footer />
-          </div>
+    <html lang="en" className="dark">
+      <body className="bg-black text-white">
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} forcedTheme="dark">
+          <LanguageProvider>
+            {children}
+            <Analytics />
+          </LanguageProvider>
         </ThemeProvider>
       </body>
     </html>

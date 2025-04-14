@@ -1,143 +1,273 @@
-import Image from "next/image"
-import Link from "next/link"
-import { ArrowRight } from "lucide-react"
+"use client"
 
-const categories = ["Tous", "Haute Couture", "Processus Créatif", "Événements", "Projets Spéciaux"]
+import { useState } from "react"
+import { motion } from "framer-motion"
+import { ExternalLink, X, ChevronLeft, ChevronRight } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import AIHeader from "@/components/ai-header"
+import Footer from "@/components/footer"
+import GradientText from "@/components/gradient-text"
+import { useLanguage } from "@/contexts/language-context"
 
-const portfolioItems = [
+// Portfolio item interface
+interface PortfolioItem {
+  id: string
+  title: string
+  titleFr: string
+  description: string
+  descriptionFr: string
+  image: string
+  url: string
+  tags: string[]
+  tagsFr: string[]
+}
+
+// Sample portfolio data
+const portfolioItems: PortfolioItem[] = [
   {
-    id: 1,
-    title: "Collection Héritage",
-    category: "Haute Couture",
-    description:
-      "Notre collection phare qui célèbre l'héritage culturel sénégalais à travers des créations contemporaines.",
-    image: "/portfolio-1.jpg",
-    imageQuery: "fashion runway with models wearing black and gold haute couture dresses",
-    slug: "collection-heritage",
+    id: "website-1",
+    title: "E-Commerce Platform",
+    titleFr: "Plateforme E-Commerce",
+    description: "A modern e-commerce platform with AI-powered product recommendations and search functionality.",
+    descriptionFr:
+      "Une plateforme e-commerce moderne avec des recommandations de produits et une fonctionnalité de recherche alimentées par l'IA.",
+    image: "/placeholder.svg?key=nu2bb",
+    url: "https://example.com/ecommerce",
+    tags: ["E-Commerce", "AI Recommendations", "Responsive Design"],
+    tagsFr: ["E-Commerce", "Recommandations IA", "Design Responsive"],
   },
   {
-    id: 2,
-    title: "Artisanat Textile",
-    category: "Processus Créatif",
+    id: "website-2",
+    title: "Financial Services Dashboard",
+    titleFr: "Tableau de Bord Services Financiers",
     description:
-      "Un aperçu de notre processus de création, où tradition et innovation se rencontrent pour créer des textiles uniques.",
-    image: "/portfolio-2.jpg",
-    imageQuery: "artisans working on traditional textile with gold thread embroidery",
-    slug: "artisanat-textile",
+      "An intuitive dashboard for financial services with real-time data visualization and predictive analytics.",
+    descriptionFr:
+      "Un tableau de bord intuitif pour les services financiers avec visualisation de données en temps réel et analyses prédictives.",
+    image: "/placeholder.svg?key=olj6b",
+    url: "https://example.com/finance",
+    tags: ["Finance", "Data Visualization", "Predictive Analytics"],
+    tagsFr: ["Finance", "Visualisation de Données", "Analyses Prédictives"],
   },
   {
-    id: 3,
-    title: "Défilé Dakar Fashion Week",
-    category: "Événements",
+    id: "website-3",
+    title: "Healthcare Patient Portal",
+    titleFr: "Portail Patient Santé",
     description:
-      "Notre participation à la Dakar Fashion Week, présentant nos créations les plus audacieuses sur le podium.",
-    image: "/portfolio-3.jpg",
-    imageQuery: "fashion show in Dakar with models on runway wearing elegant black and gold designs",
-    slug: "defile-dakar-fashion-week",
+      "A secure patient portal for healthcare providers, featuring appointment scheduling and medical record access.",
+    descriptionFr:
+      "Un portail patient sécurisé pour les prestataires de soins de santé, avec planification de rendez-vous et accès aux dossiers médicaux.",
+    image: "/placeholder.svg?key=kn6ns",
+    url: "https://example.com/healthcare",
+    tags: ["Healthcare", "Security", "User Experience"],
+    tagsFr: ["Santé", "Sécurité", "Expérience Utilisateur"],
   },
   {
-    id: 4,
-    title: "Collaboration Artistique",
-    category: "Projets Spéciaux",
+    id: "website-4",
+    title: "Educational Learning Platform",
+    titleFr: "Plateforme d'Apprentissage Éducative",
     description:
-      "Une collaboration unique avec des artistes locaux, fusionnant mode et art visuel dans une collection exclusive.",
-    image: "/portfolio-4.jpg",
-    imageQuery: "artistic collaboration between fashion designer and painter, black and gold theme",
-    slug: "collaboration-artistique",
+      "An interactive learning platform with personalized course recommendations and progress tracking for students.",
+    descriptionFr:
+      "Une plateforme d'apprentissage interactive avec des recommandations de cours personnalisées et un suivi des progrès pour les étudiants.",
+    image: "/placeholder.svg?key=sa9m1",
+    url: "https://example.com/education",
+    tags: ["Education", "Interactive Learning", "Progress Tracking"],
+    tagsFr: ["Éducation", "Apprentissage Interactif", "Suivi des Progrès"],
   },
   {
-    id: 5,
-    title: "Atelier de Création",
-    category: "Processus Créatif",
-    description: "Une immersion dans notre atelier, où chaque pièce est conçue et réalisée avec passion et précision.",
-    image: "/portfolio-5.jpg",
-    imageQuery: "fashion design studio with artisans working on black and gold garments",
-    slug: "atelier-de-creation",
+    id: "website-5",
+    title: "Real Estate Listing Portal",
+    titleFr: "Portail d'Annonces Immobilières",
+    description:
+      "A comprehensive real estate portal with virtual tours, AI-powered property matching, and market analytics.",
+    descriptionFr:
+      "Un portail immobilier complet avec visites virtuelles, correspondance de propriétés alimentée par l'IA et analyses de marché.",
+    image: "/placeholder.svg?key=7jhun",
+    url: "https://maisonova-io.vercel.app/",
+    tags: ["Real Estate", "Virtual Tours", "Property Matching"],
+    tagsFr: ["Immobilier", "Visites Virtuelles", "Correspondance de Propriétés"],
   },
   {
-    id: 6,
-    title: "Collection Modernité",
-    category: "Haute Couture",
+    id: "website-6",
+    title: "Travel Booking Platform",
+    titleFr: "Plateforme de Réservation de Voyages",
     description:
-      "Une collection qui repousse les limites du design traditionnel pour créer des pièces résolument modernes.",
-    image: "/portfolio-6.jpg",
-    imageQuery: "modern fashion collection with black and gold theme, contemporary designs",
-    slug: "collection-modernite",
-  },
-  {
-    id: 7,
-    title: "Exposition Textile",
-    category: "Événements",
-    description:
-      "Notre exposition dédiée à l'art textile, présentant l'évolution de nos techniques et designs au fil des années.",
-    image: "/portfolio-7.jpg",
-    imageQuery: "textile art exhibition with black and gold fabrics displayed in gallery",
-    slug: "exposition-textile",
-  },
-  {
-    id: 8,
-    title: "Projet Communautaire",
-    category: "Projets Spéciaux",
-    description:
-      "Une initiative visant à transmettre les techniques traditionnelles aux jeunes générations d'artisans.",
-    image: "/portfolio-8.jpg",
-    imageQuery: "community workshop teaching traditional textile techniques to young artisans",
-    slug: "projet-communautaire",
+      "A travel booking platform with personalized recommendations, virtual destination previews, and trip planning tools.",
+    descriptionFr:
+      "Une plateforme de réservation de voyages avec des recommandations personnalisées, des aperçus virtuels de destinations et des outils de planification de voyage.",
+    image: "/travel-planning-interface.png",
+    url: "https://example.com/travel",
+    tags: ["Travel", "Booking System", "Trip Planning"],
+    tagsFr: ["Voyage", "Système de Réservation", "Planification de Voyage"],
   },
 ]
 
 export default function PortfolioPage() {
-  return (
-    <div className="pt-24 pb-16">
-      <div className="container mx-auto px-4 md:px-6">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="hero-title mb-4">Notre Portfolio</h1>
-          <div className="w-20 h-1 bg-gold mx-auto mb-6"></div>
-          <p className="max-w-2xl mx-auto text-muted-foreground">
-            Découvrez notre collection de projets et créations, témoignant de notre engagement envers l'excellence et
-            l'innovation dans l'artisanat textile.
-          </p>
-        </div>
+  const { language, t } = useLanguage()
+  const [selectedItem, setSelectedItem] = useState<PortfolioItem | null>(null)
+  const [currentIndex, setCurrentIndex] = useState(0)
 
-        {/* Portfolio Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {portfolioItems.map((item) => (
-            <div key={item.id} className="group overflow-hidden">
-              <Link href={`/portfolio/${item.slug}`} className="block">
-                <div className="relative overflow-hidden aspect-square mb-4">
-                  <Image
+  const openPreview = (item: PortfolioItem) => {
+    setSelectedItem(item)
+    setCurrentIndex(portfolioItems.findIndex((i) => i.id === item.id))
+  }
+
+  const closePreview = () => {
+    setSelectedItem(null)
+  }
+
+  const navigatePreview = (direction: "next" | "prev") => {
+    if (direction === "next") {
+      setCurrentIndex((prev) => (prev + 1) % portfolioItems.length)
+    } else {
+      setCurrentIndex((prev) => (prev - 1 + portfolioItems.length) % portfolioItems.length)
+    }
+    setSelectedItem(portfolioItems[currentIndex])
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-950 text-white">
+      <AIHeader />
+
+      <main className="pt-24 pb-16">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-12">
+            <h1 className="text-3xl md:text-4xl font-light mb-4">
+              <GradientText from="from-africa-orange" to="to-africa-green">
+                {language === "en" ? "Our Portfolio" : "Notre Portfolio"}
+              </GradientText>
+            </h1>
+            <p className="text-lg text-gray-300 max-w-2xl mx-auto font-light">
+              {language === "en"
+                ? "Explore our collection of successful projects and digital solutions we've created for our clients."
+                : "Explorez notre collection de projets réussis et de solutions numériques que nous avons créées pour nos clients."}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {portfolioItems.map((item) => (
+              <motion.div
+                key={item.id}
+                className="bg-gray-900/60 backdrop-blur-sm rounded-xl overflow-hidden border border-gray-800 shadow-lg group"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                viewport={{ once: true }}
+                whileHover={{ y: -5 }}
+              >
+                <div className="relative h-48 overflow-hidden">
+                  <img
                     src={item.image || "/placeholder.svg"}
-                    alt={item.title}
-                    fill
-                    className="object-cover transition-transform duration-700 group-hover:scale-110"
-                    query={item.imageQuery}
+                    alt={language === "en" ? item.title : item.titleFr}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   />
-                  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <div className="text-center text-white p-6 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                      <div className="text-gold text-sm uppercase tracking-wider mb-2">{item.category}</div>
-                      <h3 className="text-2xl font-serif font-medium mb-2">{item.title}</h3>
-                      <div className="w-12 h-0.5 bg-gold mx-auto"></div>
-                    </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent opacity-70" />
+                  <div className="absolute bottom-0 left-0 right-0 p-4">
+                    <h3 className="text-xl font-medium text-white">{language === "en" ? item.title : item.titleFr}</h3>
                   </div>
                 </div>
-                <div className="text-center">
-                  <h3 className="font-serif text-xl font-medium mb-2 group-hover:text-gold transition-colors">
-                    {item.title}
+
+                <div className="p-4">
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {(language === "en" ? item.tags : item.tagsFr).map((tag, index) => (
+                      <span key={index} className="text-xs bg-gray-800 text-gray-300 px-2 py-1 rounded-full font-light">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  <p className="text-gray-300 text-sm font-light mb-4 line-clamp-2">
+                    {language === "en" ? item.description : item.descriptionFr}
+                  </p>
+                  <div className="flex justify-between">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="text-africa-orange border-africa-orange hover:bg-africa-orange/10"
+                      onClick={() => openPreview(item)}
+                    >
+                      {language === "en" ? "Preview" : "Aperçu"}
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-gray-300"
+                      onClick={() => window.open(item.url, "_blank")}
+                    >
+                      <ExternalLink className="h-4 w-4 mr-1" />
+                      {language === "en" ? "Visit" : "Visiter"}
+                    </Button>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Website Preview Modal */}
+          {selectedItem && (
+            <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+              <motion.div
+                className="bg-gray-900 rounded-xl overflow-hidden max-w-4xl w-full max-h-[90vh] flex flex-col"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+              >
+                <div className="p-4 border-b border-gray-800 flex justify-between items-center">
+                  <h3 className="text-xl font-medium">
+                    {language === "en" ? selectedItem.title : selectedItem.titleFr}
                   </h3>
-                  <p className="text-muted-foreground">{item.description}</p>
-                  <div className="mt-4">
-                    <span className="inline-flex items-center text-gold font-medium group-hover:underline">
-                      Voir le projet
-                      <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                    </span>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="text-gray-400 hover:text-white"
+                      onClick={() => window.open(selectedItem.url, "_blank")}
+                    >
+                      <ExternalLink className="h-5 w-5" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="text-gray-400 hover:text-white"
+                      onClick={closePreview}
+                    >
+                      <X className="h-5 w-5" />
+                    </Button>
                   </div>
                 </div>
-              </Link>
+
+                <div className="flex-1 overflow-hidden relative">
+                  <div className="absolute inset-0 overflow-auto">
+                    <iframe
+                      src={selectedItem.url}
+                      title={language === "en" ? selectedItem.title : selectedItem.titleFr}
+                      className="w-full h-full border-0"
+                      sandbox="allow-same-origin allow-scripts"
+                    />
+                  </div>
+                  <div className="absolute inset-0 pointer-events-none border border-gray-700 rounded-b-xl" />
+                </div>
+
+                <div className="p-4 border-t border-gray-800 flex justify-between items-center">
+                  <Button variant="outline" size="sm" className="text-gray-300" onClick={() => navigatePreview("prev")}>
+                    <ChevronLeft className="h-4 w-4 mr-1" />
+                    {language === "en" ? "Previous" : "Précédent"}
+                  </Button>
+                  <p className="text-sm text-gray-400">
+                    {currentIndex + 1} / {portfolioItems.length}
+                  </p>
+                  <Button variant="outline" size="sm" className="text-gray-300" onClick={() => navigatePreview("next")}>
+                    {language === "en" ? "Next" : "Suivant"}
+                    <ChevronRight className="h-4 w-4 ml-1" />
+                  </Button>
+                </div>
+              </motion.div>
             </div>
-          ))}
+          )}
         </div>
-      </div>
+      </main>
+
+      <Footer />
     </div>
   )
 }
